@@ -66,7 +66,7 @@ void MyServer::sendFrame(cv::Mat *capture)
     writeIsComplite = false;
 
     // Кодируем изображение кодеком JPEG
-    cv::imencode(".jpg", &capture, buf, quality_params);
+    cv::imencode(".jpg", *capture, buf, quality_params);
 
     rows = capture->rows;
     cols = capture->cols;

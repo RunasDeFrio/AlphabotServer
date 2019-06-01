@@ -5,7 +5,7 @@ CameraIPSystem::CameraIPSystem(QObject *parent, MyServer *server, QThread* threa
 {
     connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()));
     connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)));
-    connect(threadCamera, SIGNAL(started()), camera_system, SLOT(GrabLoop()));
+    connect(threadCamera, SIGNAL(started()), this, SLOT(GrabLoop()));
 
     moveToThread(threadCamera);
 }
@@ -32,7 +32,7 @@ void CameraIPSystem::RetrieveFrameToServer()
     mutexForCameraGrab.lock();
     Camera.retrieve (imageToSend);
     mutexForCameraGrab.unlock();
-    emit frameReady(*imageToSend);
+    emit frameReady(&imageToSend);
 }
 
 /**/
