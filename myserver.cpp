@@ -21,6 +21,8 @@ void MyServer::startServer()
 
 void MyServer::incommingConnection()
 {
+    qDebug() << "NEW CONNECT";
+
     socket.setSocketDescriptor((server->nextPendingConnection())->socketDescriptor()); // получаем сокет нового входящего подключения
 
     connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState))); // делаем обработчик изменения статуса сокета
@@ -32,6 +34,8 @@ void MyServer::incommingConnection()
 
 void MyServer::readyRead()
 {
+    qDebug() << "NEW DATA";
+
     QByteArray arrBlock;
     QDataStream in(&arrBlock, QIODevice::ReadOnly);
     //    in.setVersion(QDataStream::Qt_4_2);

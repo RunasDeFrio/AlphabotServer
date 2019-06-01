@@ -14,10 +14,10 @@ void CameraIPSystem::GrabLoop()
 {
 
     double time_=cv::getTickCount();
-
+    qDebug() << "GRAB";
     while(true)
     {
-        qDebug() << "GRAB";
+
         mutexForCameraGrab.lock();
         Camera.grab();
         mutexForCameraGrab.unlock();
