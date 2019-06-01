@@ -35,7 +35,6 @@ void MyServer::readyRead()
 
     QByteArray arrBlock;
     QDataStream in(&arrBlock, QIODevice::ReadOnly);
-    //    in.setVersion(QDataStream::Qt_4_2);
 
     Signal typeMessage;
     QString str;
