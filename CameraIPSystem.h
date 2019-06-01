@@ -20,7 +20,7 @@ class CameraIPSystem : public QObject
 {
     Q_OBJECT
 public:
-    CameraIPSystem(QObject *parent, MyServer *server, QThread *threadCamera);
+    CameraIPSystem(MyServer *server, QThread *threadCamera, QObject *parent = 0);
 
     raspicam::RaspiCam_Cv Camera;
     cv::Mat imageToSend;// Буфер для сжатого изображения

@@ -1,6 +1,6 @@
 #include "CameraIPSystem.h"
 using namespace std;
-CameraIPSystem::CameraIPSystem(QObject *parent, MyServer *server, QThread* threadCamera):
+CameraIPSystem::CameraIPSystem(MyServer *server, QThread* threadCamera, QObject *parent):
     QObject(parent)
 {
     moveToThread(threadCamera);
@@ -12,12 +12,10 @@ CameraIPSystem::CameraIPSystem(QObject *parent, MyServer *server, QThread* threa
 
 void CameraIPSystem::GrabLoop()
 {
-
     double time_=cv::getTickCount();
     qDebug() << "GRAB";
     while(true)
     {
-
         mutexForCameraGrab.lock();
         Camera.grab();
         mutexForCameraGrab.unlock();

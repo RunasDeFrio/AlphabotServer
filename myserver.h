@@ -22,9 +22,9 @@ class MyServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit MyServer(QObject *parent = 0);
+    explicit MyServer(QThread *threadServer, QObject *parent = 0);
 
-    void startServer();
+
 private:
 
     QTcpServer* server;
@@ -43,8 +43,10 @@ private:
 protected:
     void incomingConnection( qintptr handle );
 public slots:
-    void sendFrame(cv::Mat *capture);
 
+    void startServer();
+
+    void sendFrame(cv::Mat *capture);
     void incommingConnection(); // обработчик входящего подключения
     void readyRead(); // обработчик входящих данных
     void stateChanged(QAbstractSocket::SocketState stat); // обработчик изменения состояния вещающего сокета (он нам важен, дабы у нас всегда был кто-то, кто будет вещать

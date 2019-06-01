@@ -2,10 +2,13 @@
 #include <QTime>
 using namespace std;
 
-MyServer::MyServer(QObject *parent):
+MyServer::MyServer(QThread* threadServer, QObject *parent):
     QObject(parent),
     quality_params(2)
 {
+    moveToThread(threadServer);
+    connect(threadServer, SIGNAL(started()), this, SLOT(startServer()));
+
     quality_params[0] = cv::IMWRITE_JPEG_QUALITY; // Кодек JPEG
     quality_params[1] = 20;
 }
