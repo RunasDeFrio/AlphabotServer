@@ -6,16 +6,18 @@ MyServer::MyServer(QObject *parent):
     QObject(parent),
     quality_params(2)
 {
-    server = new QTcpServer(this);
-
-    qDebug() << "server listen = " << server->listen(QHostAddress::Any, 1234);
-    connect(server, SIGNAL(newConnection()), this, SLOT(incommingConnection())); // подключаем сигнал "новое подключение" к нашему обработчику подключений
-    connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
     quality_params[0] = cv::IMWRITE_JPEG_QUALITY; // Кодек JPEG
     quality_params[1] = 20;
 }
 
-
+void MyServer::startServer()
+{
+    qDebug() << "Server start";
+    server = new QTcpServer(this);
+    qDebug() << "server listen = " << server->listen(QHostAddress::Any, 1234);
+    connect(server, SIGNAL(newConnection()), this, SLOT(incommingConnection())); // подключаем сигнал "новое подключение" к нашему обработчику подключений
+    connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
+}
 
 void MyServer::incommingConnection()
 {

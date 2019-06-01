@@ -3,21 +3,21 @@ using namespace std;
 CameraIPSystem::CameraIPSystem(QObject *parent, MyServer *server, QThread* threadCamera):
     QObject(parent)
 {
+    moveToThread(threadCamera);
+
     connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()));
     connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)));
     connect(threadCamera, SIGNAL(started()), this, SLOT(GrabLoop()));
-
-    moveToThread(threadCamera);
 }
 
 void CameraIPSystem::GrabLoop()
 {
-    cout<<"Capturing thread start"<<endl;
 
     double time_=cv::getTickCount();
 
     while(true)
     {
+        qDebug() << "GRAB";
         mutexForCameraGrab.lock();
         Camera.grab();
         mutexForCameraGrab.unlock();
@@ -29,6 +29,7 @@ void CameraIPSystem::GrabLoop()
 
 void CameraIPSystem::RetrieveFrameToServer()
 {
+    qDebug() << "RetrieveFrameToServer";
     mutexForCameraGrab.lock();
     Camera.retrieve (imageToSend);
     mutexForCameraGrab.unlock();

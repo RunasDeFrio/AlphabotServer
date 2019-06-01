@@ -99,9 +99,10 @@ int main ( int argc,char **argv )
     }
     cout<<"Connected to camera ="<<camera_system->Camera.getId() <<endl;
 
-    cout<<"ALL SYSTEM RUNNING.\nSTART WORK."<<
+    cout<<"--ALL SYSTEM RUNNING.\n--START WORK.\n"<<
           "=================================================\n\n";
     threadCamera->start();
+    server->startServer();
 
     return a.exec();
 }

@@ -24,6 +24,7 @@ class MyServer : public QObject
 public:
     explicit MyServer(QObject *parent = 0);
 
+    void startServer();
 private:
 
     QTcpServer* server;
