@@ -22,7 +22,7 @@ public:
     SocketAdapter();
     ~SocketAdapter();
     Signal readNextBlock(QByteArray &arrBlock);
-    void sendMassege(const QString &str);
+    void sendMessege(const QString &str);
     void sendFile(const QString &filePath);
     void sendCapture(QByteArray &Capture, quint16 rows, quint16 cols, quint16 type);
     void sendCommand(Signal signal);

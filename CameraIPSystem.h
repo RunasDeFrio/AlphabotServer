@@ -4,6 +4,7 @@
 #include <QRunnable>
 #include <QDebug>
 #include <QThread>
+#include <QMutex>
 #include "myserver.h"
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -12,19 +13,27 @@
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
+#include <QTcpServer>
 #include "raspicam_cv.h"
-class CameraIPSystem : public QRunnable
+#include "socketadapter.h"
+class CameraIPSystem : public QObject
 {
+    Q_OBJECT
 public:
-    CameraIPSystem(QThreadPool* pool);
-	
-    void sendFrame(cv::Mat &capture);
+    CameraIPSystem(QObject *parent, MyServer *server, QThread *threadCamera);
+
     raspicam::RaspiCam_Cv Camera;
+    cv::Mat imageToSend;// Буфер для сжатого изображения
 private:
-    MyServer server;
+    QMutex	mutexForCameraGrab;
 protected:
     void run();
-    cv::Mat image;// Буфер для сжатого изображения
+
+public slots:
+    void RetrieveFrameToServer();
+    void GrabLoop();
+signals:
+    void frameReady(cv::Mat *imageToSend);
 };
 
 #endif // CAMERAIPSYSTEM_H

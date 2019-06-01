@@ -1,60 +1,94 @@
-// MyServer.cpp
-
 #include "myserver.h"
-#include "myrunnable.h"
+#include <QTime>
+using namespace std;
 
-MyServer::MyServer(QObject *parent) :
-    QTcpServer(parent)
+MyServer::MyServer(QObject *parent):
+    QObject(parent),
+    quality_params(2)
 {
-    //pool = new QThreadPool(this);
-    //pool->setMaxThreadCount(1);
-    data.messages<<"STARTING WORK\n";
+    server = new QTcpServer(this);
+
+    qDebug() << "server listen = " << server->listen(QHostAddress::Any, 1234);
+    connect(server, SIGNAL(newConnection()), this, SLOT(incommingConnection())); // подключаем сигнал "новое подключение" к нашему обработчику подключений
+    connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
+    quality_params[0] = cv::IMWRITE_JPEG_QUALITY; // Кодек JPEG
+    quality_params[1] = 20;
 }
 
-void MyServer::startServer()
+
+
+void MyServer::incommingConnection()
 {
-    if(this->listen(QHostAddress::Any, 1234))
-        qDebug() << "Server started";
-    else
-        qDebug() << "Server did not start!";
+    socket.setSocketDescriptor((server->nextPendingConnection())->socketDescriptor()); // получаем сокет нового входящего подключения
+
+    connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState))); // делаем обработчик изменения статуса сокета
+    connect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead())); // подключаем входящие сообщения от вещающего на наш обработчик
+
+    socket.sendMessege("Connection complite"); // говорим ему что он "вещает"
+    qDebug() << "Connect to PC";
 }
 
-void MyServer::saveData(cv::Mat &capture)
+void MyServer::readyRead()
 {
-    if(data.writeIsComplite)
+    QByteArray arrBlock;
+    QDataStream in(&arrBlock, QIODevice::ReadOnly);
+    //    in.setVersion(QDataStream::Qt_4_2);
+
+    Signal typeMessage;
+    QString str;
+    typeMessage = socket.readNextBlock(arrBlock);
+
+    switch (typeMessage)
     {
-		data.writeIsComplite = false;
-		
-		std::vector<int> quality_params(2);  // Вектор параметров качества сжатия
-		quality_params[0] = cv::IMWRITE_JPEG_QUALITY; // Кодек JPEG
-		quality_params[1] = 20;
-		// Кодируем изображение кодеком JPEG
-		cv::imencode(".jpg", capture, data.buf, quality_params);
-		
-        data.rows = capture.rows;
-        data.cols = capture.cols;
-        data.type = capture.type();
-		data.capture = QByteArray(reinterpret_cast<const char*>(data.buf.data()),  data.buf.size());
-        //data.capture = QByteArray(reinterpret_cast<const char*>(capture.dataend),  1+(capture.datastart-capture.dataend));
-	    //qDebug() << 1+(capture.datastart-capture.dataend);
-        //capture((const char*)&imgBuf[0], static_cast<int>(imgBuf.size()));
-        data.haveNewMessage = true;
+    case Message:
+        in >> str;
+        qDebug() <<"from PC: " + QTime::currentTime().toString()+" "+str;
+        break;
+    case Command:
+        Signal command;
+        in >> (quint8&)command;
+        if(command == CapEnd)
+        {
+            qDebug()<<"Client Comlite";
+            emit readyReadNewCapture();
+        }
+        break;
+    case File:
+        qDebug() << "File save function is off, becouse it is not necessary, sorry :(";
+        break;
+    default:
+        break;
     }
 }
 
-bool MyServer::ServerReady()
+void MyServer::sendFrame(cv::Mat *capture)
 {
-    return data.writeIsComplite;
-}
+    writeIsComplite = false;
 
-void MyServer::incomingConnection(qintptr handle)
+    // Кодируем изображение кодеком JPEG
+    cv::imencode(".jpg", &capture, buf, quality_params);
+
+    rows = capture->rows;
+    cols = capture->cols;
+    type = capture->type();
+    captureByteArray = QByteArray(reinterpret_cast<const char*>(buf.data()),  buf.size());
+
+    socket.sendCapture(captureByteArray, rows, cols, type);
+
+    writeIsComplite = true;
+    //captureByteArray = QByteArray(reinterpret_cast<const char*>(capture.dataend),  1+(capture.datastart-capture.dataend));
+    //captureByteArray((const char*)&imgBuf[0], static_cast<int>(imgBuf.size()));
+}
+/**/
+
+void MyServer::stateChanged(QAbstractSocket::SocketState state) // обработчик статуса, нужен для контроля за "вещающим"
 {
-    qDebug()<<"NEW CONNECT";
-    MyRunnable *task = new MyRunnable();
-    task->setAutoDelete(true);
-    task->socketDescriptor = handle;
-    task->data = &data;
-    pool->start(task);
-    data.writeIsComplite = true;
-    qDebug() << "pool started";
+    QString strError =
+        "Ошибка: " + (state == QAbstractSocket::UnconnectedState ?
+                     "PC connection terminated" :
+                     state == QAbstractSocket::ClosingState ?
+                     "Socket close" :
+                     QString(socket.errorString())
+                    );
+    qDebug() <<(strError);
 }

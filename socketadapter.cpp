@@ -12,7 +12,7 @@ SocketAdapter::SocketAdapter():
 
 SocketAdapter::~SocketAdapter() {}
 
-void SocketAdapter::sendMassege(const QString& str)
+void SocketAdapter::sendMessege(const QString& str)
 {
     out << (quint8)Message ;
     out << str;

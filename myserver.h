@@ -9,34 +9,46 @@
 #include <QList>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <QTcpServer>
+#include "raspicam_cv.h"
+#include "socketadapter.h"
 
 struct ShareData
 {
-    bool haveNewMessage = false, writeIsComplite = false;
-    QByteArray capture;
-    quint16 rows, cols, type;
-    QList<QString> messages;
-	std::vector<uchar> buf;
+
 };
 
-class MyServer : public QTcpServer
+class MyServer : public QObject
 {
     Q_OBJECT
 public:
     explicit MyServer(QObject *parent = 0);
 
-    ShareData data;
+private:
 
-    void startServer();
+    QTcpServer* server;
+    SocketAdapter socket;
+
+    bool haveNewMessage = false, writeIsComplite = false;
+    QByteArray captureByteArray;
+    quint16 rows, cols, type;
+    QList<QString> messages;
+    std::vector<uchar> buf;
+    std::vector<int> quality_params;  // Вектор параметров качества сжатия
+
     void saveData(cv::Mat &capture);
     bool ServerReady();
     QThreadPool *pool;
 protected:
     void incomingConnection( qintptr handle );
-private:
-    
+public slots:
+    void sendFrame(cv::Mat *capture);
 
-
+    void incommingConnection(); // обработчик входящего подключения
+    void readyRead(); // обработчик входящих данных
+    void stateChanged(QAbstractSocket::SocketState stat); // обработчик изменения состояния вещающего сокета (он нам важен, дабы у нас всегда был кто-то, кто будет вещать
+signals:
+    void readyReadNewCapture();
 };
 
 #endif // MYSERVER_H

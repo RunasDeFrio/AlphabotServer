@@ -1,12 +1,16 @@
 #include "CameraIPSystem.h"
 using namespace std;
-CameraIPSystem::CameraIPSystem(QThreadPool* pool)
+CameraIPSystem::CameraIPSystem(QObject *parent, MyServer *server, QThread* threadCamera):
+    QObject(parent)
 {
-    server.pool = pool;
-    server.startServer();
+    connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()));
+    connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)));
+    connect(threadCamera, SIGNAL(started()), camera_system, SLOT(GrabLoop()));
+
+    moveToThread(threadCamera);
 }
 
-void CameraIPSystem::run()
+void CameraIPSystem::GrabLoop()
 {
     cout<<"Capturing thread start"<<endl;
 
@@ -14,27 +18,21 @@ void CameraIPSystem::run()
 
     while(true)
     {
-        if(server.ServerReady())
-    	{
+        mutexForCameraGrab.lock();
         Camera.grab();
-        Camera.retrieve ( image );
-	
-	    sendFrame(image);
-	   //double secondsElapsed= double ( cv::getTickCount()-time_ ) /double ( cv::getTickFrequency() ); //time in second
-        //cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<< ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
-	}
+        mutexForCameraGrab.unlock();
+            //double secondsElapsed= double ( cv::getTickCount()-time_ ) /double ( cv::getTickFrequency() ); //time in second
+            //cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<< ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
     }
     Camera.release();
 }
-void CameraIPSystem::sendFrame(cv::Mat &capture)
+
+void CameraIPSystem::RetrieveFrameToServer()
 {
-    // Объявляем переменные
-    if(server.ServerReady())
-    {
-        if (capture.isContinuous())
-        {
-            server.saveData(capture);// Отправляем данные
-        }
-    }
+    mutexForCameraGrab.lock();
+    Camera.retrieve (imageToSend);
+    mutexForCameraGrab.unlock();
+    emit frameReady(*imageToSend);
 }
+
 /**/
