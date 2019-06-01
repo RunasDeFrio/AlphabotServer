@@ -16,19 +16,16 @@ void MyServer::startServer()
     server = new QTcpServer(this);
     qDebug() << "server listen = " << server->listen(QHostAddress::Any, 1234);
     connect(server, SIGNAL(newConnection()), this, SLOT(incommingConnection())); // подключаем сигнал "новое подключение" к нашему обработчику подключений
-    connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
 }
 
 void MyServer::incommingConnection()
 {
-    qDebug() << "NEW CONNECT";
+    socket = static_cast<SocketAdapter *>(server->nextPendingConnection());
 
-    socket.setSocketDescriptor((server->nextPendingConnection())->socketDescriptor()); // получаем сокет нового входящего подключения
+    connect(socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead())); // подключаем входящие сообщения от вещающего на наш обработчик
 
-    connect(&socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState))); // делаем обработчик изменения статуса сокета
-    connect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead())); // подключаем входящие сообщения от вещающего на наш обработчик
-
-    socket.sendMessege("Connection complite"); // говорим ему что он "вещает"
+    socket->sendMessege("Connection complite");
     qDebug() << "Connect to PC";
 }
 
@@ -42,7 +39,7 @@ void MyServer::readyRead()
 
     Signal typeMessage;
     QString str;
-    typeMessage = socket.readNextBlock(arrBlock);
+    typeMessage = socket->readNextBlock(arrBlock);
 
     switch (typeMessage)
     {
@@ -79,7 +76,7 @@ void MyServer::sendFrame(cv::Mat *capture)
     type = capture->type();
     captureByteArray = QByteArray(reinterpret_cast<const char*>(buf.data()),  buf.size());
 
-    socket.sendCapture(captureByteArray, rows, cols, type);
+    socket->sendCapture(captureByteArray, rows, cols, type);
 
     writeIsComplite = true;
     //captureByteArray = QByteArray(reinterpret_cast<const char*>(capture.dataend),  1+(capture.datastart-capture.dataend));
@@ -89,12 +86,8 @@ void MyServer::sendFrame(cv::Mat *capture)
 
 void MyServer::stateChanged(QAbstractSocket::SocketState state) // обработчик статуса, нужен для контроля за "вещающим"
 {
-    QString strError =
-        "Ошибка: " + (state == QAbstractSocket::UnconnectedState ?
-                     "PC connection terminated" :
-                     state == QAbstractSocket::ClosingState ?
-                     "Socket close" :
-                     QString(socket.errorString())
-                    );
-    qDebug() <<(strError);
+    if(state == QAbstractSocket::UnconnectedState)
+         qDebug() << "PC connection terminated";
+    if(state == QAbstractSocket::ClosingState)
+        qDebug() << "Socket close";
 }

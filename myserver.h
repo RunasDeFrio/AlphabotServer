@@ -28,7 +28,7 @@ public:
 private:
 
     QTcpServer* server;
-    SocketAdapter socket;
+    SocketAdapter* socket;
 
     bool haveNewMessage = false, writeIsComplite = false;
     QByteArray captureByteArray;

@@ -87,11 +87,11 @@ int main ( int argc,char **argv )
     QThread* threadCamera = new QThread;
 
     cout<<"Start camera-server"<<endl;
-    MyServer* server = new MyServer(&a);
+    MyServer* server = new MyServer();
 
-    CameraIPSystem *camera_system = new CameraIPSystem(&a, server, threadCamera);
+    CameraIPSystem *camera_system = new CameraIPSystem(nullptr, server, threadCamera);
 
-    cout<<"Connecting to camera"<<endl;
+    cout<<"Connecting to camera..."<<endl;
     processCommandLine ( argc,argv,camera_system->Camera);
     if ( !camera_system->Camera.open() ) {
         cerr<<"Error opening camera"<<endl;
@@ -99,7 +99,7 @@ int main ( int argc,char **argv )
     }
     cout<<"Connected to camera ="<<camera_system->Camera.getId() <<endl;
 
-    cout<<"--ALL SYSTEM RUNNING.\n--START WORK.\n"<<
+    cout<<"ALL SYSTEM RUNNING.\nSTART WORK.\n\n"<<
           "=================================================\n\n";
     threadCamera->start();
     server->startServer();
