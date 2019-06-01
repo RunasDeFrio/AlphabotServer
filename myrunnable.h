@@ -23,7 +23,6 @@ public:
 
     ShareData* data;
 private:
-    SocketAdapter socket;
     int messageNumber = 0;
 private:
     void read();

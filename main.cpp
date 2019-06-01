@@ -93,10 +93,10 @@ int main ( int argc,char **argv )
 
     cout<<"Connecting to camera..."<<endl;
     processCommandLine ( argc,argv,camera_system->Camera);
-    if ( !camera_system->Camera.open() ) {
-        cerr<<"Error opening camera"<<endl;
-        return -1;
-    }
+    //if ( !camera_system->Camera.open() ) {
+    //    cerr<<"Error opening camera"<<endl;
+    //    return -1;
+    //}
     cout<<"Connected to camera ="<<camera_system->Camera.getId() <<endl;
 
     cout<<"ALL SYSTEM RUNNING.\nSTART WORK.\n\n"<<

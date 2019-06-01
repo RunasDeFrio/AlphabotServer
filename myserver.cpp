@@ -20,10 +20,11 @@ void MyServer::startServer()
 
 void MyServer::incommingConnection()
 {
-    socket = static_cast<SocketAdapter *>(server->nextPendingConnection());
+    QTcpSocket* new_socket = server->nextPendingConnection();
+    socket = new SocketAdapter(new_socket);
 
-    connect(socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead())); // подключаем входящие сообщения от вещающего на наш обработчик
+    connect(new_socket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
+    connect(new_socket, SIGNAL(readyRead()), this, SLOT(readyRead())); // подключаем входящие сообщения от вещающего на наш обработчик
 
     socket->sendMessege("Connection complite");
     qDebug() << "Connect to PC";

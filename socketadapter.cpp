@@ -3,9 +3,10 @@
 #include <QFile>
 #include <QFileInfo>
 
-SocketAdapter::SocketAdapter():
+SocketAdapter::SocketAdapter(QTcpSocket* socket):
     out(&_arrBlock, QIODevice::WriteOnly),
-    in(this)
+    in(socket),
+    p_QTcpSocket(socket)
 {
     out << quint64(0);
 }
@@ -56,7 +57,7 @@ void SocketAdapter::sendBytes()
 {
     out.device()->seek(0);
     out << quint64(_arrBlock.size() - sizeof(quint64));
-    write(_arrBlock);
+    p_QTcpSocket->write(_arrBlock);
     out.device()->seek(0);
     _arrBlock.clear();
     out << quint64(0);
@@ -68,18 +69,18 @@ Signal SocketAdapter::readNextBlock(QByteArray &arrBlock)
     //Каждый переданный блок начинается полем, хранящим размер блока.
     if (m_nNextBlockSize == 0)
     {
-        if (bytesAvailable() < sizeof(quint64))
+        if (p_QTcpSocket->bytesAvailable() < sizeof(quint64))
             return Nothing;
         in >> m_nNextBlockSize;
      }
 
-    if (bytesAvailable() < m_nNextBlockSize)
+    if (p_QTcpSocket->bytesAvailable() < m_nNextBlockSize)
         return Nothing;
 
     Signal typeMessage;
     in >> (quint8&)typeMessage;
 
-    arrBlock.append(read(m_nNextBlockSize));
+    arrBlock.append(p_QTcpSocket->read(m_nNextBlockSize));
 
     m_nNextBlockSize = 0;
 

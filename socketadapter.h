@@ -14,18 +14,17 @@ enum Signal: quint8
     CapEnd
 };
 
-class SocketAdapter: public QTcpSocket
+class SocketAdapter
 {
-
-Q_OBJECT
 public:
-    SocketAdapter();
+    SocketAdapter(QTcpSocket *socket);
     ~SocketAdapter();
     Signal readNextBlock(QByteArray &arrBlock);
     void sendMessege(const QString &str);
     void sendFile(const QString &filePath);
     void sendCapture(QByteArray &Capture, quint16 rows, quint16 cols, quint16 type);
     void sendCommand(Signal signal);
+    QTcpSocket* p_QTcpSocket;
 private:
 
     void sendBytes();
