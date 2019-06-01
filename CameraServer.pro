@@ -21,13 +21,10 @@ HEADERS += \
 
 INCLUDEPATH += /usr/local/include/raspicam
 
-#LIBS += /opt/vc/lib/libmmal.so
-#LIBS += /opt/vc/lib/libmmal_core.so
-#LIBS += /opt/vc/lib/libmmal_util.so
-LIBS += /usr/local/lib/libraspicam.so 
+LIBS += /opt/vc/lib/libmmal.so
+LIBS += /opt/vc/lib/libmmal_core.so
+LIBS += /opt/vc/lib/libmmal_util.so
+LIBS += /usr/local/lib/libraspicam.so
 LIBS += /usr/local/lib/libraspicam_cv.so
 
-#LIBS +=	-lopencv_world
-LIBS += -lopencv_core \
-        -lopencv_highgui \
-        -lopencv_imgcodecs
+LIBS +=	-lopencv_world

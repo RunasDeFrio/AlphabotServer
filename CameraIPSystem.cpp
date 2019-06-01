@@ -19,7 +19,7 @@ void CameraIPSystem::GrabLoop()
     {
 
         mutexForCameraGrab.lock();
-        //Camera.grab();
+        Camera.grab();
         mutexForCameraGrab.unlock();
             //double secondsElapsed= double ( cv::getTickCount()-time_ ) /double ( cv::getTickFrequency() ); //time in second
             //cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<< ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
@@ -31,7 +31,7 @@ void CameraIPSystem::RetrieveFrameToServer()
 {
     qDebug() << "RetrieveFrameToServer";
     mutexForCameraGrab.lock();
-    //Camera.retrieve (imageToSend);
+    Camera.retrieve (imageToSend);
     mutexForCameraGrab.unlock();
     emit frameReady(&imageToSend);
 }
