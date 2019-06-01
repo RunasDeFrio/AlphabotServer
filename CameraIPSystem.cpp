@@ -5,8 +5,8 @@ CameraIPSystem::CameraIPSystem(QObject *parent, MyServer *server, QThread* threa
 {
     moveToThread(threadCamera);
 
-    connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()));
-    connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)));
+    connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()), Qt::QueuedConnection);
+    connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)), Qt::QueuedConnection);
     connect(threadCamera, SIGNAL(started()), this, SLOT(GrabLoop()));
 }
 
