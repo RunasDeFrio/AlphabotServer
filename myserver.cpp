@@ -10,7 +10,7 @@ MyServer::MyServer(QThread* threadServer, QObject *parent):
 
     connect(threadServer, SIGNAL(started()), this, SLOT(startServer()));
     quality_params[0] = cv::IMWRITE_JPEG_QUALITY; // Кодек JPEG
-    quality_params[1] = 20;
+    quality_params[1] = 100;
 }
 
 void MyServer::startServer()
@@ -35,8 +35,6 @@ void MyServer::incommingConnection()
 
 void MyServer::readyRead()
 {
-    qDebug() << "NEW DATA";
-
     QByteArray arrBlock;
     QDataStream in(&arrBlock, QIODevice::ReadOnly);
 
@@ -55,7 +53,6 @@ void MyServer::readyRead()
         in >> (quint8&)command;
         if(command == CapEnd)
         {
-            qDebug()<<"Client Comlite";
             emit readyReadNewCapture();
         }
         break;

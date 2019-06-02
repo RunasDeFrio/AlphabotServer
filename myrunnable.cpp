@@ -21,6 +21,7 @@ void MyRunnable::run()
     while(true)
     {
         mutexForCameraGrab->lock();
+	qDebug() << "GRAB";
         Camera->grab();
         mutexForCameraGrab->unlock();
         //double secondsElapsed= double ( cv::getTickCount()-time_ ) /double ( cv::getTickFrequency() ); //time in second

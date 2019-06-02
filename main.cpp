@@ -91,7 +91,7 @@ int main ( int argc,char **argv )
 
     cout<<"Start camera system..."<<endl;
     CameraIPSystem *camera_system = new CameraIPSystem(server, &threadCamera);
-    threadCamera->setAutoDelete(true);
+    //threadCamera->setAutoDelete(true);
 
     cout<<"Connecting to camera..."<<endl;
     processCommandLine ( argc,argv,camera_system->Camera);
@@ -102,7 +102,7 @@ int main ( int argc,char **argv )
     cout<<"Connected to camera ="<<camera_system->Camera.getId() <<endl;
 
     cout<<"Start camera system..."<<endl;
-    pool->start(threadCamera);
+    //pool->start(threadCamera);
     cout<<"Start server..."<<endl;
     threadServer->start();
 
