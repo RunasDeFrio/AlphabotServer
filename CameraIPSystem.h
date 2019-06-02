@@ -16,18 +16,18 @@
 #include <QTcpServer>
 #include "raspicam_cv.h"
 #include "socketadapter.h"
+#include "myrunnable.h"
+#include <QtConcurrent/qtconcurrentrun.h>
 class CameraIPSystem : public QObject
 {
     Q_OBJECT
 public:
-    CameraIPSystem(MyServer *server, QThread *threadCamera, QObject *parent = 0);
+    CameraIPSystem(MyServer *server, MyRunnable** task, QObject *parent = 0);
 
     raspicam::RaspiCam_Cv Camera;
     cv::Mat imageToSend;// Буфер для сжатого изображения
 private:
     QMutex	mutexForCameraGrab;
-protected:
-    void run();
 
 public slots:
     void RetrieveFrameToServer();

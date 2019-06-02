@@ -7,25 +7,20 @@
 #include <QTcpSocket>
 #include <QDebug>
 #include <QThread>
+#include <QMutex>
 #include "socketadapter.h"
 #include "myserver.h"
 
 class MyRunnable : public QRunnable
 {
 public:
-    MyRunnable();
+    MyRunnable(raspicam::RaspiCam_Cv* Camera, QMutex* mutexForCameraGrab);
 
 protected:
     void run();
 
 public:
-    qintptr socketDescriptor;
-
-    ShareData* data;
-private:
-    int messageNumber = 0;
-private:
-    void read();
-    void write();
+    raspicam::RaspiCam_Cv* Camera;
+    QMutex*	mutexForCameraGrab;
 };
 #endif // MYRUNNABLE_H

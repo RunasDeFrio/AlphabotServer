@@ -82,15 +82,16 @@ int main ( int argc,char **argv )
     
     QCoreApplication a(argc, argv);	
     
-    //QThreadPool* pool = new QThreadPool(&a);
-    //pool->setMaxThreadCount(5);
-    QThread* threadCamera = new QThread;
+    QThreadPool* pool = new QThreadPool(&a);
+    //pool->setMaxThreadCount(4);
     QThread* threadServer = new QThread;
+    MyRunnable *threadCamera;
 
     MyServer* server = new MyServer(threadServer);
 
     cout<<"Start camera system..."<<endl;
-    CameraIPSystem *camera_system = new CameraIPSystem(server, threadCamera);
+    CameraIPSystem *camera_system = new CameraIPSystem(server, &threadCamera);
+    threadCamera->setAutoDelete(true);
 
     cout<<"Connecting to camera..."<<endl;
     processCommandLine ( argc,argv,camera_system->Camera);
@@ -101,11 +102,12 @@ int main ( int argc,char **argv )
     cout<<"Connected to camera ="<<camera_system->Camera.getId() <<endl;
 
     cout<<"Start camera system..."<<endl;
-    threadCamera->start();
+    pool->start(threadCamera);
     cout<<"Start server..."<<endl;
     threadServer->start();
 
     cout<<"ALL SYSTEM RUNNING.\nSTART WORK."<<
           "\n\n=================================================\n\n";
+
     return a.exec();
 }

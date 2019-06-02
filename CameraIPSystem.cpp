@@ -1,28 +1,15 @@
 #include "CameraIPSystem.h"
 using namespace std;
-CameraIPSystem::CameraIPSystem(MyServer *server, QThread* threadCamera, QObject *parent):
+CameraIPSystem::CameraIPSystem(MyServer *server, MyRunnable** task, QObject *parent):
     QObject(parent)
 {
-    moveToThread(threadCamera);
-
-    connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()), Qt::QueuedConnection);
-    connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)), Qt::QueuedConnection);
-    connect(threadCamera, SIGNAL(started()), this, SLOT(GrabLoop()));
+    *(task) = new MyRunnable(&Camera, &mutexForCameraGrab);
+    connect(server, SIGNAL(readyReadNewCapture()), this, SLOT(RetrieveFrameToServer()));
+    connect(this, SIGNAL(frameReady(cv::Mat*)), server, SLOT(sendFrame(cv::Mat*)));
 }
 
 void CameraIPSystem::GrabLoop()
 {
-    double time_=cv::getTickCount();
-    qDebug() << "GRAB";
-    while(true)
-    {
-        mutexForCameraGrab.lock();
-        Camera.grab();
-        mutexForCameraGrab.unlock();
-            //double secondsElapsed= double ( cv::getTickCount()-time_ ) /double ( cv::getTickFrequency() ); //time in second
-            //cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<< ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
-    }
-    Camera.release();
 }
 
 void CameraIPSystem::RetrieveFrameToServer()
