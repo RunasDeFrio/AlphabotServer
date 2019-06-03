@@ -27,7 +27,7 @@ SerialPortModule::SerialPortModule(QThread *thread)
 void SerialPortModule::openSerialPort()
 {
     qDebug()<<"port select: "<<QSerialPortInfo::availablePorts()[num].portName();
-    serial->setPortName(QSerialPortInfo::availablePorts()[0].portName());
+    serial->setPortName(QSerialPortInfo::availablePorts()[num].portName());
     serial->setBaudRate(QSerialPort::Baud57600);
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
