@@ -28,7 +28,7 @@ void SerialPortModule::openSerialPort()
 {
     qDebug()<<"port select: "<<QSerialPortInfo::availablePorts()[num].portName();
     serial->setPortName(QSerialPortInfo::availablePorts()[num].portName());
-    serial->setBaudRate(QSerialPort::Baud57600);
+    serial->setBaudRate(QSerialPort::Baud115200);
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
     serial->setStopBits(QSerialPort::OneStop);
@@ -59,9 +59,8 @@ void SerialPortModule::writeData()
 
 void SerialPortModule::readData()
 {
-    qDebug()<<"New Serial data: ";
     QString str = serial->readAll();
-    qDebug() << str;
+    std::cout << str.toStdString();
 }
 
 void SerialPortModule::handleError(QSerialPort::SerialPortError error)
