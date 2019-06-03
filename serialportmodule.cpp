@@ -17,7 +17,7 @@ SerialPortModule::SerialPortModule(QThread *thread)
     {
         std::cout << "Please, select port: ";
         std::cin >> num;
-    }while(num < QSerialPortInfo::availablePorts().size() && num >= 0);
+    }while(!(num < QSerialPortInfo::availablePorts().size() && num >= 0));
 
 
     moveToThread(thread);
