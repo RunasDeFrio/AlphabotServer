@@ -1,23 +1,27 @@
 QT += core
 QT += network
 QT -= gui
+QT += serialport
 
 TARGET = SERVER
 CONFIG   += console
 CONFIG   -= app_bundle
 TEMPLATE = app
 
+
 SOURCES += main.cpp\
     myserver.cpp \
     myrunnable.cpp \
     socketadapter.cpp \
-    CameraIPSystem.cpp
+    CameraIPSystem.cpp \
+    serialportmodule.cpp
 
 HEADERS += \
     myserver.h \
     myrunnable.h \
     socketadapter.h \
-    CameraIPSystem.h
+    CameraIPSystem.h \
+    serialportmodule.h
 
 INCLUDEPATH += /usr/local/include/raspicam
 

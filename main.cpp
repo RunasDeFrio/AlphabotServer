@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include "raspicam_cv.h"
-
+#include "serialportmodule.h"
 
 #include "CameraIPSystem.h"
 
@@ -82,16 +82,14 @@ int main ( int argc,char **argv )
     
     QCoreApplication a(argc, argv);	
     
-    QThreadPool* pool = new QThreadPool(&a);
-    //pool->setMaxThreadCount(4);
     QThread* threadServer = new QThread;
+    QThread* threadSerial = new QThread;
     MyRunnable *threadCamera;
 
     MyServer* server = new MyServer(threadServer);
 
     cout<<"Start camera system..."<<endl;
     CameraIPSystem *camera_system = new CameraIPSystem(server, &threadCamera);
-    //threadCamera->setAutoDelete(true);
 
     cout<<"Connecting to camera..."<<endl;
     processCommandLine ( argc,argv,camera_system->Camera);
@@ -100,9 +98,13 @@ int main ( int argc,char **argv )
         return -1;
     }
     cout<<"Connected to camera ="<<camera_system->Camera.getId() <<endl;
-
     cout<<"Start camera system..."<<endl;
-    //pool->start(threadCamera);
+
+
+    cout<<"Start serial port module..."<<endl;
+    SerialPortModule serialModule(threadSerial);
+
+    threadSerial->start();
     cout<<"Start server..."<<endl;
     threadServer->start();
 
