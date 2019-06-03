@@ -59,6 +59,7 @@ void SerialPortModule::writeData()
 
 void SerialPortModule::readData()
 {
+    qDebug()<<"New Serial data: ";
     QString str = serial->readAll();
     qDebug() << str;
 }
