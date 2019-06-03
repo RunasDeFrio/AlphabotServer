@@ -11,7 +11,6 @@ class SerialPortModule : public QObject
 public:
     SerialPortModule(QThread *thread);
 
-    ~SerialPortModule();
 public slots:
     void openSerialPort();
 private slots:
