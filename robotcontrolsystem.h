@@ -8,8 +8,8 @@ class RobotControlSystem : public QObject
 {
     Q_OBJECT
 public:
-    explicit RobotControlSystem(MyServer *server, SerialPortModule* serial, QObject *parent = nullptr);
-
+   explicit RobotControlSystem(MyServer *server, SerialPortModule* serial, QObject *parent = nullptr);
+   int n = 0;
    QVector<RobotData> dataHystory;
 signals:
     void pullRobotDataToServer(RobotData* data);

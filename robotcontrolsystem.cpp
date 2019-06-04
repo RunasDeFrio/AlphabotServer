@@ -9,7 +9,6 @@ RobotControlSystem::RobotControlSystem(MyServer *server, SerialPortModule *seria
 void RobotControlSystem::pushNewRobotSerialData(QString str)
 {
     RobotData data;
-    qDebug()<<"Parsing!";
     QStringList stringList = str.split(" ");
     data.time = stringList[0].toFloat();
     data.Ul = stringList[1].toFloat();
@@ -21,5 +20,10 @@ void RobotControlSystem::pushNewRobotSerialData(QString str)
     data.x = stringList[7].toFloat()/100;
     data.y = stringList[8].toFloat()/100;
     dataHystory.push_back(data);
-    emit pullRobotDataToServer(&(dataHystory.last()));
+    if(n == 100)
+    {
+        n = 0;
+        emit pullRobotDataToServer(&(dataHystory.last()));
+    }
+    else n++;
 }
