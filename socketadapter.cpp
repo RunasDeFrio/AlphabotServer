@@ -43,7 +43,15 @@ void SocketAdapter::sendRobotData(RobotData& data)
 {
     out << (quint8)DataRobot;
 
-    out << data.time << data.Ul << data.Ur << data.wl << data.wr << data.v << data.fi << data.x << data.y;
+    out << data.time;
+    out << data.Ul;
+    out << data.Ur;
+    out << data.wl;
+    out << data.wr;
+    out << data.v;
+    out << data.fi;
+    out << data.x;
+    out << data.y;
 
     sendBytes();
 }
@@ -76,6 +84,9 @@ void SocketAdapter::sendBytes()
 {
     out.device()->seek(0);
     out << quint64(_arrBlock.size() - sizeof(quint64));
+
+    qDebug() << QString::number((_arrBlock.size() - sizeof(quint64))/1024.0)+" KB";
+
     p_QTcpSocket->write(_arrBlock);
     out.device()->seek(0);
     _arrBlock.clear();
