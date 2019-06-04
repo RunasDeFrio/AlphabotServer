@@ -53,6 +53,7 @@ public slots:
 signals:
     void readyReadNewCapture();
     void newPosition(float x, float y);
+    void newCommand(QString str);
 };
 
 #endif // MYSERVER_H

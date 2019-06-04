@@ -63,6 +63,17 @@ void MyServer::readyRead()
             in >> x;
             in >> y;
             emit newPosition(x, y);
+            break;
+
+        case Move:
+            QString s = "MOVE";
+            emit newCommand(s);
+            break;
+
+        case Stop:
+            QString s = "STOP";
+            emit newCommand(s);
+            break;
 
         default:
             break;

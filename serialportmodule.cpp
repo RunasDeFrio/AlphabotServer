@@ -23,6 +23,7 @@ SerialPortModule::SerialPortModule(MyServer* server, QThread *thread)
 
 
     connect(server, SIGNAL(newPosition(float,float)), this, SLOT(writePosition(float,float)));
+    connect(server, SIGNAL(newCommand(QString)), this, SLOT(writeCommand(QString)));
 
     moveToThread(thread);
     connect(thread, SIGNAL(started()), this, SLOT(openSerialPort()));
@@ -55,6 +56,12 @@ void SerialPortModule::writePosition(float x, float y)
     writeData();
 
     str ="Y " + QString::number(y);
+    writeData();
+}
+
+void SerialPortModule::writeCommand(QString str)
+{
+    this->str = str;
     writeData();
 }
 

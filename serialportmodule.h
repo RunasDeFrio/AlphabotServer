@@ -14,6 +14,7 @@ public:
 public slots:
     void openSerialPort();
     void writePosition(float x, float y);
+    void writeCommand(QString str);
 private slots:
     void closeSerialPort();
     void writeData();
