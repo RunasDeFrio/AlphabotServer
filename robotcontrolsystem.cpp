@@ -3,7 +3,7 @@
 RobotControlSystem::RobotControlSystem(MyServer *server, SerialPortModule *serial, QObject *parent) : QObject(parent)
 {
     connect(serial, SIGNAL(newRobotData(QString)), this, SLOT(pushNewRobotSerialData(QString)));
-    connect(this, SIGNAL(pullRobotDataToServer(RobotData&)), server, SLOT(sendRobotData(RobotData&)));
+    connect(this, SIGNAL(pullRobotDataToServer(RobotData*)), server, SLOT(sendRobotData(RobotData*)));
 }
 
 void RobotControlSystem::pushNewRobotSerialData(QString str)
@@ -21,5 +21,5 @@ void RobotControlSystem::pushNewRobotSerialData(QString str)
     data.x = stringList[7].toFloat()/100;
     data.y = stringList[8].toFloat()/100;
     dataHystory.push_back(data);
-    emit pullRobotDataToServer(dataHystory.last());
+    emit pullRobotDataToServer(&(dataHystory.last()));
 }

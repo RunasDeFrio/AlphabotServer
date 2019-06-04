@@ -12,7 +12,7 @@ public:
 
    QVector<RobotData> dataHystory;
 signals:
-    void pullRobotDataToServer(RobotData& data);
+    void pullRobotDataToServer(RobotData* data);
 
 public slots:
     void pushNewRobotSerialData(QString str);

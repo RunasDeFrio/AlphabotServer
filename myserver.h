@@ -47,7 +47,7 @@ public slots:
     void readyRead(); // обработчик входящих данных
     void stateChanged(QAbstractSocket::SocketState stat); // обработчик изменения состояния вещающего сокета (он нам важен, дабы у нас всегда был кто-то, кто будет вещать
 
-    void sendRobotData(RobotData& data);
+    void sendRobotData(RobotData *data);
 signals:
     void readyReadNewCapture();
     void newPosition(float x, float y);
