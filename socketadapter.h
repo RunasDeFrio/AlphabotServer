@@ -10,11 +10,17 @@ enum Signal: quint8
     Message,
     File,
     Capture,
+    DataRobot,
     Command,
     CapEnd,
     NewPosition,
     Move,
     Stop
+};
+
+struct RobotData
+{
+    float time, Ul, Ur, x, y, fi, v, wl, wr;
 };
 
 class SocketAdapter
@@ -28,6 +34,8 @@ public:
     void sendCapture(QByteArray &Capture, quint16 rows, quint16 cols, quint16 type);
     void sendCommand(Signal signal);
     QTcpSocket* p_QTcpSocket;
+    void sendNewPosition(float x, float y);
+    void sendRobotData(RobotData &data);
 private:
 
     void sendBytes();

@@ -116,3 +116,8 @@ void MyServer::stateChanged(QAbstractSocket::SocketState state) // обрабо�
     if(state == QAbstractSocket::ClosingState)
         qDebug() << "Socket close";
 }
+
+void MyServer::sendRobotData(RobotData &data)
+{
+
+}

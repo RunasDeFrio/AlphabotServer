@@ -6,7 +6,7 @@
 #include <sstream>
 #include "raspicam_cv.h"
 #include "serialportmodule.h"
-
+#include "robotcontrolsystem.h"
 #include "CameraIPSystem.h"
 
 using namespace std;
@@ -102,6 +102,8 @@ int main ( int argc,char **argv )
 
     cout<<"Start serial port module..."<<endl;
     SerialPortModule* serialModule = new SerialPortModule(server, threadSerial);
+
+    RobotControlSystem robot(server, serialModule);
 
     threadSerial->start();
     cout<<"Start server..."<<endl;

@@ -14,14 +14,16 @@ SOURCES += main.cpp\
     myrunnable.cpp \
     socketadapter.cpp \
     CameraIPSystem.cpp \
-    serialportmodule.cpp
+    serialportmodule.cpp \
+    robotcontrolsystem.cpp
 
 HEADERS += \
     myserver.h \
     myrunnable.h \
     socketadapter.h \
     CameraIPSystem.h \
-    serialportmodule.h
+    serialportmodule.h \
+    robotcontrolsystem.h
 
 INCLUDEPATH += /usr/local/include/raspicam
 

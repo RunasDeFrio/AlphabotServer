@@ -1,5 +1,4 @@
 #include "socketadapter.h"
-
 #include <QFile>
 #include <QFileInfo>
 
@@ -25,6 +24,26 @@ void SocketAdapter::sendCommand(Signal signal)
 {
     out << (quint8)Command ;
     out << (quint8)signal;
+
+    sendBytes();
+}
+
+void SocketAdapter::sendNewPosition(float x, float y)
+{
+    out << (quint8)Command ;
+    out << (quint8)NewPosition;
+
+    out << x;
+    out << y;
+
+    sendBytes();
+}
+
+void SocketAdapter::sendRobotData(RobotData& data)
+{
+    out << (quint8)DataRobot;
+
+    out << data.time << data.Ul << data.Ur << data.wl << data.wr << data.v << data.fi << data.x << data.y;
 
     sendBytes();
 }

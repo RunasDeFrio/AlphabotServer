@@ -80,9 +80,30 @@ void SerialPortModule::writeData()
 
 void SerialPortModule::readData()
 {
-    QString str = QString::fromStdString( serial->readAll().toStdString());
-    qDebug()<<str;
-    std::cout << str.toStdString();
+    std::string str = serial->readAll().toStdString();
+    for(int i = 0; i < str.size(); i++)
+    {
+        if(readCompleted)
+        {
+            if(str[i] == '[')
+            {
+                readCompleted = false;
+            }
+            else
+            {
+                std::cout<<str[i];
+            }
+        }
+        else if(str[i]!=']')
+            strData += str[i];
+        else
+        {
+            readCompleted = true;
+            emit newRobotData(strData);
+            strData = "";
+        }
+    }
+    //std::cout << str;
 }
 
 void SerialPortModule::handleError(QSerialPort::SerialPortError error)

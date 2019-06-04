@@ -13,10 +13,6 @@
 #include "raspicam_cv.h"
 #include "socketadapter.h"
 
-struct ShareData
-{
-
-};
 
 class MyServer : public QObject
 {
@@ -50,6 +46,8 @@ public slots:
     void incommingConnection(); // обработчик входящего подключения
     void readyRead(); // обработчик входящих данных
     void stateChanged(QAbstractSocket::SocketState stat); // обработчик изменения состояния вещающего сокета (он нам важен, дабы у нас всегда был кто-то, кто будет вещать
+
+    void sendRobotData(RobotData& data);
 signals:
     void readyReadNewCapture();
     void newPosition(float x, float y);
