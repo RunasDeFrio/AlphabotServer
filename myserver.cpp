@@ -60,7 +60,8 @@ void MyServer::readyRead()
 
         case NewPosition:
             float x, y;
-            in >> x, y;
+            in >> x;
+            in >> y;
             emit newPosition(x, y);
 
         default:
