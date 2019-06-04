@@ -52,6 +52,7 @@ public slots:
     void stateChanged(QAbstractSocket::SocketState stat); // обработчик изменения состояния вещающего сокета (он нам важен, дабы у нас всегда был кто-то, кто будет вещать
 signals:
     void readyReadNewCapture();
+    void newPosition(float x, float y);
 };
 
 #endif // MYSERVER_H

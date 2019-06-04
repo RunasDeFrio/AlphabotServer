@@ -48,14 +48,27 @@ void MyServer::readyRead()
         in >> str;
         qDebug() <<"from PC: " + QTime::currentTime().toString()+" "+str;
         break;
+
     case Command:
         Signal command;
         in >> (quint8&)command;
-        if(command == CapEnd)
+        switch (command)
         {
+        case CapEnd:
             emit readyReadNewCapture();
+            break;
+
+        case NewPosition:
+            float x, y;
+            in >> x, y;
+            emit newPosition(x, y);
+
+        default:
+            break;
         }
+
         break;
+
     case File:
         qDebug() << "File save function is off, becouse it is not necessary, sorry :(";
         break;
@@ -87,7 +100,7 @@ void MyServer::sendFrame(cv::Mat *capture)
 void MyServer::stateChanged(QAbstractSocket::SocketState state) // обработчик статуса, нужен для контроля за "вещающим"
 {
     if(state == QAbstractSocket::UnconnectedState)
-         qDebug() << "PC connection terminated";
+        qDebug() << "PC connection terminated";
     if(state == QAbstractSocket::ClosingState)
         qDebug() << "Socket close";
 }

@@ -4,15 +4,16 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QtCore/QDebug>
-
+#include "myserver.h"
 class SerialPortModule : public QObject
 {
     Q_OBJECT
 public:
-    SerialPortModule(QThread *thread);
+    SerialPortModule(MyServer* server, QThread *thread);
 
 public slots:
     void openSerialPort();
+    void writePosition(float x, float y);
 private slots:
     void closeSerialPort();
     void writeData();

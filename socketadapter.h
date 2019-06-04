@@ -11,7 +11,8 @@ enum Signal: quint8
     File,
     Capture,
     Command,
-    CapEnd
+    CapEnd,
+    NewPosition
 };
 
 class SocketAdapter

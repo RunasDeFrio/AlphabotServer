@@ -1,11 +1,13 @@
 #include "serialportmodule.h"
 #include <iostream>
-SerialPortModule::SerialPortModule(QThread *thread)
+SerialPortModule::SerialPortModule(MyServer* server, QThread *thread)
 {
     serial = new QSerialPort(this);
 
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
             SLOT(handleError(QSerialPort::SerialPortError)));
+    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
     qDebug()<<"Available ports:";
@@ -19,6 +21,8 @@ SerialPortModule::SerialPortModule(QThread *thread)
         std::cin >> num;
     }while(!(num < QSerialPortInfo::availablePorts().size() && num >= 0));
 
+
+    connect(server, SIGNAL(newPosition(float,float)), this, SLOT(writePosition(float,float)));
 
     moveToThread(thread);
     connect(thread, SIGNAL(started()), this, SLOT(openSerialPort()));
@@ -45,6 +49,15 @@ void SerialPortModule::openSerialPort()
 
 }
 
+void SerialPortModule::writePosition(float x, float y)
+{
+    str ="X " + QString::number(x);
+    writeData();
+
+    str ="Y " + QString::number(y);
+    writeData();
+}
+
 void SerialPortModule::closeSerialPort()
 {
     if (serial->isOpen())
@@ -55,6 +68,7 @@ void SerialPortModule::writeData()
 {
     str+='\n';
     serial->write(str.toLocal8Bit());
+    str = "";
 }
 
 void SerialPortModule::readData()

@@ -84,12 +84,11 @@ int main ( int argc,char **argv )
     
     QThread* threadServer = new QThread;
     QThread* threadSerial = new QThread;
-    MyRunnable *threadCamera;
 
     MyServer* server = new MyServer(threadServer);
 
     cout<<"Start camera system..."<<endl;
-    CameraIPSystem *camera_system = new CameraIPSystem(server, &threadCamera);
+    CameraIPSystem *camera_system = new CameraIPSystem(server, nullptr);
 
     cout<<"Connecting to camera..."<<endl;
     processCommandLine ( argc,argv,camera_system->Camera);
@@ -102,7 +101,7 @@ int main ( int argc,char **argv )
 
 
     cout<<"Start serial port module..."<<endl;
-    SerialPortModule serialModule(threadSerial);
+    SerialPortModule* serialModule = new SerialPortModule(server, threadSerial);
 
     threadSerial->start();
     cout<<"Start server..."<<endl;
