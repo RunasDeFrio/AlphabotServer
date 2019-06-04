@@ -1,9 +1,12 @@
 #include "robotcontrolsystem.h"
 
-RobotControlSystem::RobotControlSystem(MyServer *server, SerialPortModule *serial, QObject *parent) : QObject(parent)
+RobotControlSystem::RobotControlSystem(MyServer *server, SerialPortModule *serial, QThread *threadRobot, QObject *parent) : QObject(parent)
 {
     connect(serial, SIGNAL(newRobotData(QString)), this, SLOT(pushNewRobotSerialData(QString)));
     connect(this, SIGNAL(pullRobotDataToServer(RobotData*)), server, SLOT(sendRobotData(RobotData*)));
+
+    moveToThread(threadRobot);
+    connect(threadRobot, SIGNAL(started()), this, SLOT(start()));
 }
 
 void RobotControlSystem::pushNewRobotSerialData(QString str)

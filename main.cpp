@@ -84,6 +84,7 @@ int main ( int argc,char **argv )
     
     QThread* threadServer = new QThread;
     QThread* threadSerial = new QThread;
+    QThread* threadRobot  = new QThread;
 
     MyServer* server = new MyServer(threadServer);
 
@@ -103,12 +104,13 @@ int main ( int argc,char **argv )
     cout<<"Start serial port module..."<<endl;
     SerialPortModule* serialModule = new SerialPortModule(server, threadSerial);
 
-    RobotControlSystem robot(server, serialModule);
+    RobotControlSystem robot(server, serialModule, threadRobot);
 
     threadSerial->start();
     cout<<"Start server..."<<endl;
     threadServer->start();
-
+    cout<<"Start Robot Control System..."<<endl;
+    threadRobot->start();
     cout<<"ALL SYSTEM RUNNING.\nSTART WORK."<<
           "\n\n=================================================\n\n";
 
