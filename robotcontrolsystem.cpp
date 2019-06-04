@@ -31,3 +31,8 @@ void RobotControlSystem::pushNewRobotSerialData(QString str)
     }
     else n++;
 }
+
+void RobotControlSystem::start()
+{
+    qDebug()<<"Robot Control System start!";
+}
