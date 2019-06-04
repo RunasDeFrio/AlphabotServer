@@ -100,6 +100,7 @@ void SerialPortModule::readData()
         {
             readCompleted = true;
             emit newRobotData(strData);
+            qDebug() << 'emit!';
             strData = "";
         }
     }

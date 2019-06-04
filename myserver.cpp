@@ -119,5 +119,6 @@ void MyServer::stateChanged(QAbstractSocket::SocketState state) // обрабо�
 
 void MyServer::sendRobotData(RobotData *data)
 {
+    qDebug()<<"Send!";
     socket->sendRobotData(*data);
 }

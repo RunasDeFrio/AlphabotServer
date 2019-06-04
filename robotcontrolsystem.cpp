@@ -9,7 +9,7 @@ RobotControlSystem::RobotControlSystem(MyServer *server, SerialPortModule *seria
 void RobotControlSystem::pushNewRobotSerialData(QString str)
 {
     RobotData data;
-
+    qDebug()<<"Parsing!";
     QStringList stringList = str.split(" ");
     data.time = stringList[0].toFloat();
     data.Ul = stringList[1].toFloat();
