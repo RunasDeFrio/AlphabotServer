@@ -80,7 +80,8 @@ void SerialPortModule::writeData()
 
 void SerialPortModule::readData()
 {
-    QString str = serial->readAll();
+    QString str(serial->readAll());
+    qDebug()<<str;
     std::cout << str.toStdString();
 }
 
