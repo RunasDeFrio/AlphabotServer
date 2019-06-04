@@ -20,10 +20,11 @@ void RobotControlSystem::pushNewRobotSerialData(QString str)
     data.x = stringList[7].toFloat()/100;
     data.y = stringList[8].toFloat()/100;
     dataHystory.push_back(data);
-    if(n == 100)
+    if(n == 1000)
     {
         n = 0;
         emit pullRobotDataToServer(&(dataHystory.last()));
+        qDebug()<< data.time << data.Ul << data.Ur << data.wl << data.wr << data.v << data.fi << data.x << data.y;
     }
     else n++;
 }
