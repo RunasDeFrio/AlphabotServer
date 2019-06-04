@@ -66,13 +66,13 @@ void MyServer::readyRead()
             break;
 
         case Move:
-            QString s = "MOVE";
-            emit newCommand(s);
+            str = "MOVE";
+            emit newCommand(str);
             break;
 
         case Stop:
-            QString s = "STOP";
-            emit newCommand(s);
+            str = "STOP";
+            emit newCommand(str);
             break;
 
         default:
