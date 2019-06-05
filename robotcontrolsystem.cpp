@@ -25,7 +25,7 @@ void RobotControlSystem::pushNewRobotSerialData(QString str)
     dataHystory.push_back(data);
 
     emit pullRobotDataToServer(&(dataHystory.last()));
-    qDebug()<< data.time << data.Ul << data.Ur << data.wl << data.wr << data.v << data.fi << data.x << data.y;
+    //qDebug()<< data.time << data.Ul << data.Ur << data.wl << data.wr << data.v << data.fi << data.x << data.y;
 }
 
 void RobotControlSystem::start()
