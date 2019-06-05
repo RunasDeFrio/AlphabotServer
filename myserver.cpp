@@ -127,7 +127,6 @@ void MyServer::sendRobotData(RobotData *data)
     robotData.push_back(data);
     if(trackReadEnd)
     {
-        qDebug() << "Track!";
         trackReadEnd = false;
         socket->sendRobotData(robotData);
         robotData.clear();
