@@ -64,7 +64,7 @@ void SocketAdapter::sendRobotData(QVector<RobotData*>& data)
     qDebug() << "PUSH!";
     for(int i = 0; i < data.size(); i++)
     {
-        qDebug() << "RobotData"<< i;
+        qDebug() << "RobotData"<< i <<data.size();
         out << data[i]->time;
         out << data[i]->Ul;
         out << data[i]->Ur;

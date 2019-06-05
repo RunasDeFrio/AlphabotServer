@@ -10,7 +10,7 @@ class RobotControlSystem : public QObject
 public:
    explicit RobotControlSystem(MyServer *server, SerialPortModule* serial, QThread* threadRobot, QObject *parent = nullptr);
    int n = 0;
-   QVector<RobotData> dataHystory;
+   QVector<RobotData*> dataHystory;
 signals:
     void pullRobotDataToServer(RobotData* data);
 
