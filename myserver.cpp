@@ -56,6 +56,9 @@ void MyServer::readyRead()
         {
         case CapEnd:
             captureReadEnd = true;
+            break;
+        case CapNeed:
+            captureReadEnd =false;
             emit readyReadNewCapture();
             break;
         case TrackEnd:
@@ -101,7 +104,6 @@ void MyServer::sendFrame(cv::Mat *capture)
     cols = capture->cols;
     type = capture->type();
     captureByteArray = QByteArray(reinterpret_cast<const char*>(buf.data()),  buf.size());
-
     socket->sendCapture(captureByteArray, rows, cols, type);
 
     //captureByteArray = QByteArray(reinterpret_cast<const char*>(capture.dataend),  1+(capture.datastart-capture.dataend));

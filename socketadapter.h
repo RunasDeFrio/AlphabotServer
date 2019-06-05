@@ -14,6 +14,7 @@ enum Signal: quint8
     Command,
     TrackEnd,
     CapEnd,
+    CapNeed,
     NewPosition,
     Move,
     Stop
