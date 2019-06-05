@@ -26,13 +26,13 @@ private:
     QTcpServer* server;
     SocketAdapter* socket;
 
-    bool haveNewMessage = false, writeIsComplite = false;
+    bool trackReadEnd = true, captureReadEnd = true;
     QByteArray captureByteArray;
     quint16 rows, cols, type;
     QList<QString> messages;
     std::vector<uchar> buf;
     std::vector<int> quality_params;  // Вектор параметров качества сжатия
-
+    QVector<RobotData*> robotData;
     void saveData(cv::Mat &capture);
     bool ServerReady();
     QThreadPool *pool;

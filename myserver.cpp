@@ -55,9 +55,12 @@ void MyServer::readyRead()
         switch (command)
         {
         case CapEnd:
+            captureReadEnd = true;
             emit readyReadNewCapture();
             break;
-
+        case TrackEnd:
+            trackReadEnd = true;
+            break;
         case NewPosition:
             float x, y;
             in >> x;
@@ -91,8 +94,6 @@ void MyServer::readyRead()
 
 void MyServer::sendFrame(cv::Mat *capture)
 {
-    writeIsComplite = false;
-
     // Кодируем изображение кодеком JPEG
     cv::imencode(".jpg", *capture, buf, quality_params);
 
@@ -103,7 +104,6 @@ void MyServer::sendFrame(cv::Mat *capture)
 
     socket->sendCapture(captureByteArray, rows, cols, type);
 
-    writeIsComplite = true;
     //captureByteArray = QByteArray(reinterpret_cast<const char*>(capture.dataend),  1+(capture.datastart-capture.dataend));
     //captureByteArray((const char*)&imgBuf[0], static_cast<int>(imgBuf.size()));
 }
@@ -119,5 +119,11 @@ void MyServer::stateChanged(QAbstractSocket::SocketState state) // обрабо�
 
 void MyServer::sendRobotData(RobotData *data)
 {
-    socket->sendRobotData(*data);
+    robotData.push_back(data);
+    if(trackReadEnd)
+    {
+        trackReadEnd = false;
+        socket->sendRobotData(robotData);
+        robotData.clear();
+    }
 }

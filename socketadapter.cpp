@@ -56,6 +56,25 @@ void SocketAdapter::sendRobotData(RobotData& data)
     sendBytes();
 }
 
+void SocketAdapter::sendRobotData(QVector<RobotData*>& data)
+{
+    out << (quint8)DataRobot;
+    out << (quint16)data.size();
+    for(int i = 0; i < data.size(); i++)
+    {
+        out << data[i]->time;
+        out << data[i]->Ul;
+        out << data[i]->Ur;
+        out << data[i]->wl;
+        out << data[i]->wr;
+        out << data[i]->v;
+        out << data[i]->fi;
+        out << data[i]->x;
+        out << data[i]->y;
+    }
+    sendBytes();
+}
+
 void SocketAdapter::sendCapture(QByteArray &capture, quint16 rows, quint16 cols, quint16 type)
 {
     out << (quint8)Capture;
