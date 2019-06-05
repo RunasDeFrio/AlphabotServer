@@ -23,7 +23,7 @@ void RobotControlSystem::pushNewRobotSerialData(QString str)
     data.x = stringList[7].toFloat()/100;
     data.y = stringList[8].toFloat()/100;
     dataHystory.push_back(data);
-    if(n == 15)
+    if(n == 0)
     {
         n = 0;
         emit pullRobotDataToServer(&(dataHystory.last()));
