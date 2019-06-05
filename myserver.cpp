@@ -55,6 +55,8 @@ void MyServer::readyRead()
         switch (command)
         {
         case CapEnd:
+
+            qDebug() << "CapEnd!";
             captureReadEnd = true;
             break;
         case CapNeed:
@@ -62,6 +64,7 @@ void MyServer::readyRead()
             emit readyReadNewCapture();
             break;
         case TrackEnd:
+            qDebug() << "TrackEnd!";
             trackReadEnd = true;
             break;
         case NewPosition:
@@ -124,6 +127,7 @@ void MyServer::sendRobotData(RobotData *data)
     robotData.push_back(data);
     if(trackReadEnd && captureReadEnd)
     {
+        qDebug() << "Track!";
         trackReadEnd = false;
         socket->sendRobotData(robotData);
         robotData.clear();
