@@ -122,7 +122,7 @@ void MyServer::stateChanged(QAbstractSocket::SocketState state) // обрабо�
 void MyServer::sendRobotData(RobotData *data)
 {
     robotData.push_back(data);
-    if(trackReadEnd)
+    if(trackReadEnd && captureReadEnd)
     {
         trackReadEnd = false;
         socket->sendRobotData(robotData);
