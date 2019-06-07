@@ -2,8 +2,8 @@
 #include <algorithm>
 RobotControlSystem::RobotControlSystem(MyServer *server, SerialPortModule *serial, QThread *threadRobot, QObject *parent) : QObject(parent)
 {
-    dataHystory = new QVector<RobotData>(10);
-    dataHystoryBuffer = new QVector<RobotData>(10);
+    dataHystory = new QVector<RobotData>();
+    dataHystoryBuffer = new QVector<RobotData>();
 
     connect(serial, SIGNAL(newRobotData(QString)), this, SLOT(pushNewRobotSerialData(QString)));
 
