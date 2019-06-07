@@ -59,6 +59,7 @@ void MyServer::readyRead()
             readEnd = true;
             break;
         case CapNeed:
+            qDebug()<<"readyReadNewCapture";
             if(readEnd)
             {
                 readEnd =false;
@@ -66,6 +67,7 @@ void MyServer::readyRead()
             }
             break;
         case TrackNeed:
+            qDebug()<<"readyReadNewRobotData";
             if(readEnd)
             {
                 readEnd =false;

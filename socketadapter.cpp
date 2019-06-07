@@ -107,7 +107,7 @@ void SocketAdapter::sendBytes()
     out.device()->seek(0);
     out << quint64(_arrBlock.size() - sizeof(quint64));
 
-    qDebug() << QString::number((_arrBlock.size() - sizeof(quint64))/1024.0)+" KB";
+    qDebug() <<"Write: "+ QString::number((_arrBlock.size() - sizeof(quint64))/1024.0)+" KB";
 
     p_QTcpSocket->write(_arrBlock);
     out.device()->seek(0);
@@ -128,6 +128,7 @@ Signal SocketAdapter::readNextBlock(QByteArray &arrBlock)
 
     if (p_QTcpSocket->bytesAvailable() < m_nNextBlockSize)
         return Nothing;
+    qDebug() << "Read: "+QString::number(m_nNextBlockSize/1024.0)+" KB";
 
     Signal typeMessage;
     in >> (quint8&)typeMessage;
