@@ -45,6 +45,7 @@ void MyServer::readyRead()
 
     switch (typeMessage)
     {
+    qDebug()<<"new type Message!" << (int)typeMessage;
     case Message:
         in >> str;
         qDebug() <<"from PC: " + QTime::currentTime().toString()+" "+str;
@@ -53,6 +54,7 @@ void MyServer::readyRead()
     case Command:
         Signal command;
         in >> (quint8&)command;
+        qDebug()<<"new Command!" << (int)command;
         switch (command)
         {
         case CapEnd:
