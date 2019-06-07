@@ -26,16 +26,14 @@ private:
     QTcpServer* server;
     SocketAdapter* socket;
 
-    bool trackReadEnd = true, captureReadEnd = true;
+    bool readEnd = true;
     QByteArray captureByteArray;
     quint16 rows, cols, type;
     QList<QString> messages;
     std::vector<uchar> buf;
     std::vector<int> quality_params;  // Вектор параметров качества сжатия
-    QVector<RobotData*> robotData;
     void saveData(cv::Mat &capture);
     bool ServerReady();
-    QThreadPool *pool;
 protected:
     void incomingConnection( qintptr handle );
 public slots:
@@ -47,9 +45,10 @@ public slots:
     void readyRead(); // обработчик входящих данных
     void stateChanged(QAbstractSocket::SocketState stat); // обработчик изменения состояния вещающего сокета (он нам важен, дабы у нас всегда был кто-то, кто будет вещать
 
-    void sendRobotData(RobotData *data);
+    void sendRobotData(QVector<RobotData>* data);
 signals:
     void readyReadNewCapture();
+    void readyReadNewRobotData();
     void newPosition(float x, float y);
     void newCommand(QString str);
 };

@@ -12,9 +12,10 @@ enum Signal: quint8
     Capture,
     DataRobot,
     Command,
+    CapNeed,
+    TrackNeed,
     TrackEnd,
     CapEnd,
-    CapNeed,
     NewPosition,
     Move,
     Stop
@@ -38,7 +39,7 @@ public:
     QTcpSocket* p_QTcpSocket;
     void sendNewPosition(float x, float y);
     void sendRobotData(RobotData &data);
-    void sendRobotData(QVector<RobotData *> &data);
+    void sendRobotData(QVector<RobotData> &data);
 private:
 
     void sendBytes();

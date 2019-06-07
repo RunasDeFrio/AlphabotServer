@@ -31,6 +31,7 @@ void MyServer::incommingConnection()
 
     socket->sendMessege("Connection complite");
     qDebug() << "Connect to PC";
+    readEnd = true;
 }
 
 void MyServer::readyRead()
@@ -55,17 +56,24 @@ void MyServer::readyRead()
         switch (command)
         {
         case CapEnd:
-
-            qDebug() << "CapEnd!";
-            captureReadEnd = true;
+            readEnd = true;
             break;
         case CapNeed:
-            captureReadEnd =false;
-            emit readyReadNewCapture();
+            if(readEnd)
+            {
+                readEnd =false;
+                emit readyReadNewCapture();
+            }
+            break;
+        case TrackNeed:
+            if(readEnd)
+            {
+                readEnd =false;
+                emit readyReadNewRobotData();
+            }
             break;
         case TrackEnd:
-            qDebug() << "TrackEnd!";
-            trackReadEnd = true;
+            readEnd = true;
             break;
         case NewPosition:
             float x, y;
@@ -87,7 +95,6 @@ void MyServer::readyRead()
         default:
             break;
         }
-
         break;
 
     case File:
@@ -122,13 +129,8 @@ void MyServer::stateChanged(QAbstractSocket::SocketState state) // обрабо�
         qDebug() << "Socket close";
 }
 
-void MyServer::sendRobotData(RobotData *data)
+void MyServer::sendRobotData(QVector<RobotData> *data)
 {
-    robotData.push_back(data);
-    if(trackReadEnd)
-    {
-        trackReadEnd = false;
-        socket->sendRobotData(robotData);
-        robotData.clear();
-    }
+    socket->sendRobotData(*data);
+    data->clear();
 }
